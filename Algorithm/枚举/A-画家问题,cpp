@@ -1,0 +1,63 @@
+#include <iostream>
+#include <bitset>
+#define N 15
+#define INF 0x3f3f3f3f
+
+std::bitset<N> board_original[N];
+std::bitset<N> board[N];
+std::bitset<N> bit;
+int n;
+int result = INF;
+
+void solve(int x)
+{
+    int temp = 0;
+    bit = x;
+    for (int i = 0; i < n; ++i)
+        board[i] = board_original[i];
+    for (int i = 0; i < n; ++i)
+    {
+        temp += bit.count();
+        for (int j = 0; j < n; ++j)
+        {
+            if (bit[j])
+            {
+                board[i].flip(j);
+                if (j)
+                    board[i].flip(j - 1);
+                if (j < n - 1)
+                    board[i].flip(j + 1);
+            }
+        }
+        if (i < n - 1)
+            board[i + 1] ^= bit;
+        bit = (1 << n) - 1;
+        bit ^= board[i];
+    }
+    if (board[n - 1].count() == n)
+        result = std::min(result, temp);
+}
+
+int main()
+{
+    char c;
+    scanf("%d", &n);
+    getchar();
+    for (int i = 0; i < n; ++i)
+    {
+        board_original[i] = 0;
+        for (int j = 0; j < n; ++j)
+        {
+            c = getchar();
+            if (c == 'y')
+                board_original[i][j] = 1;
+        }
+        getchar();
+    }
+    for (int i = 0; i < (1 << n); ++i)
+        solve(i);
+    if (result == INF)
+        puts("inf");
+    else
+        printf("%d\n", result);
+}
