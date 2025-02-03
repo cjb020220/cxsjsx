@@ -441,12 +441,12 @@ void Wolf::loot_before_fight(int tick, std::unique_ptr<Warrior> &warrior)
 
 void City::runaway(int tick)
 {
-    for (int i = 0; i < faction_count; ++i)
+    for (faction_type type : {red, blue})
     {
-        if (this->warrior[i] != nullptr && this->warrior[i]->type == lion && this->warrior[i]->get_loyalty() <= 0)
+        if (this->warrior[type] != nullptr && this->warrior[type]->type == lion && this->warrior[type]->get_loyalty() <= 0)
         {
-            std::cout << time_convert(tick) << " " << this->warrior[i]->name << " ran away" << std::endl;
-            this->warrior[i].reset();
+            std::cout << time_convert(tick) << " " << this->warrior[type]->name << " ran away" << std::endl;
+            this->warrior[type].reset();
         }
     }
 }
